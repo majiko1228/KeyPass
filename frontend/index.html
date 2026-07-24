@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeyPass</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app" id="app">
+    <section class="lock-screen" id="lockScreen">
+      <div class="lock-card">
+        <div class="brand-mark">K</div>
+        <div>
+          <p class="eyebrow">Private vault</p>
+          <h1>KeyPass</h1>
+          <p class="muted">Unlock the demo vault to manage saved accounts locally.</p>
+        </div>
+        <form class="unlock-form" id="unlockForm">
+          <label>
+            Master password
+            <input id="masterPassword" type="password" autocomplete="current-password" placeholder="keypass-demo">
+          </label>
+          <button class="primary" type="submit">Unlock vault</button>
+          <p class="form-note" id="unlockHint">Demo password: <span>keypass-demo</span></p>
+        </form>
+      </div>
+    </section>
+
+    <div class="shell hidden" id="shell">
+      <aside class="sidebar">
+        <div>
+          <p class="eyebrow">Navigation</p>
+          <h2>Vault</h2>
+        </div>
+        <nav class="nav" id="nav">
+          <button class="nav-item active" data-view="vault">All entries</button>
+          <button class="nav-item" data-view="favorites">Favorites</button>
+          <button class="nav-item" data-view="trash">Trash</button>
+          <button class="nav-item" data-view="settings">Settings</button>
+        </nav>
+
+        <section class="sidebar-section">
+          <div class="section-head">
+            <p>Tags</p>
+            <button class="ghost tiny" id="clearTagFilter" type="button">Clear</button>
+          </div>
+          <div class="tag-list" id="tagList"></div>
+        </section>
+
+        <section class="sidebar-section stats">
+          <div>
+            <span class="stat-value" id="entryCount">0</span>
+            <span class="stat-label">entries</span>
+          </div>
+          <div>
+            <span class="stat-value" id="favoriteCount">0</span>
+            <span class="stat-label">favorites</span>
+          </div>
+          <div>
+            <span class="stat-value" id="trashCount">0</span>
+            <span class="stat-label">trash</span>
+          </div>
+        </section>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow" id="viewLabel">All entries</p>
+            <h2 id="viewTitle">Account vault</h2>
+          </div>
+          <div class="topbar-actions">
+            <div class="search-shell">
+              <input id="searchInput" type="search" placeholder="Search by title, username, url, tag">
+            </div>
+            <button class="primary" id="newEntryButton" type="button">New entry</button>
+            <button class="ghost" id="lockButton" type="button">Lock</button>
+          </div>
+        </header>
+
+        <section class="workspace" id="vaultView">
+          <div class="panel list-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Library</p>
+                <h3>Saved accounts</h3>
+              </div>
+              <span class="pill" id="filteredCount">0 shown</span>
+            </div>
+            <div class="entry-list" id="entryList"></div>
+          </div>
+
+          <div class="panel detail-panel" id="detailPanel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Details</p>
+                <h3>Entry preview</h3>
+              </div>
+              <div class="panel-actions">
+                <button class="ghost tiny" id="copyUsernameButton" type="button">Copy username</button>
+                <button class="ghost tiny" id="copyPasswordButton" type="button">Copy password</button>
+              </div>
+            </div>
+            <div class="detail-empty" id="detailEmpty">
+              <p>Select an entry to preview the details.</p>
+            </div>
+            <article class="detail-card hidden" id="detailCard">
+              <div class="detail-title-row">
+                <div>
+                  <h3 id="detailTitle"></h3>
+                  <p class="muted" id="detailUrl"></p>
+                </div>
+                <button class="icon-button" id="favoriteButton" type="button" aria-label="Toggle favorite">★</button>
+              </div>
+
+              <dl class="detail-grid">
+                <div>
+                  <dt>Username</dt>
+                  <dd id="detailUsername"></dd>
+                </div>
+                <div>
+                  <dt>Password</dt>
+                  <dd id="detailPassword"></dd>
+                </div>
+                <div>
+                  <dt>Tags</dt>
+                  <dd id="detailTags"></dd>
+                </div>
+                <div class="detail-wide">
+                  <dt>Notes</dt>
+                  <dd id="detailNotes"></dd>
+                </div>
+              </dl>
+
+              <div class="detail-actions">
+                <button class="primary" id="editEntryButton" type="button">Edit</button>
+                <button class="ghost" id="deleteEntryButton" type="button">Move to trash</button>
+                <button class="ghost" id="generatePasswordButton" type="button">Open generator</button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view-panel hidden" id="trashView">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">Recovery</p>
+              <h3>Trash</h3>
+            </div>
+            <span class="pill" id="trashShownCount">0 items</span>
+          </div>
+          <div class="table" id="trashList"></div>
+        </section>
+
+        <section class="view-panel hidden" id="settingsView">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">Controls</p>
+              <h3>Settings</h3>
+            </div>
+            <span class="pill">Local demo</span>
+          </div>
+
+          <div class="settings-grid">
+            <section class="panel settings-panel">
+              <h4>Security</h4>
+              <label>
+                Master password
+                <input id="masterPasswordSetting" type="text" placeholder="keypass-demo">
+              </label>
+              <label>
+                Auto-lock minutes
+                <select id="autoLockSetting">
+                  <option value="1">1 minute</option>
+                  <option value="3">3 minutes</option>
+                  <option value="5">5 minutes</option>
+                  <option value="10">10 minutes</option>
+                </select>
+              </label>
+              <button class="primary" id="saveSecurityButton" type="button">Save security settings</button>
+            </section>
+
+            <section class="panel settings-panel">
+              <h4>Backup</h4>
+              <div class="button-row">
+                <button class="ghost" id="exportButton" type="button">Export JSON</button>
+                <label class="ghost file-button" for="importInput">Import JSON</label>
+                <input id="importInput" type="file" accept="application/json">
+              </div>
+              <p class="muted">Import replaces the current local demo data.</p>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="overlay hidden" id="entryModal">
+      <div class="modal">
+        <div class="panel-head compact">
+          <div>
+            <p class="eyebrow" id="entryModalEyebrow">New account</p>
+            <h3 id="entryModalTitle">Add entry</h3>
+          </div>
+          <button class="icon-button" data-close="entryModal" type="button" aria-label="Close modal">×</button>
+        </div>
+
+        <form id="entryForm" class="form-grid">
+          <input type="hidden" id="entryId" name="id">
+          <label>
+            Title
+            <input id="entryTitle" name="title" required maxlength="80" placeholder="GitHub">
+          </label>
+          <label>
+            Username
+            <input id="entryUsername" name="username" required maxlength="120" placeholder="majiko1228">
+          </label>
+          <label>
+            Password
+            <input id="entryPassword" name="password" required maxlength="160" placeholder="••••••••">
+          </label>
+          <label>
+            URL
+            <input id="entryUrl" name="url" maxlength="200" placeholder="https://github.com">
+          </label>
+          <label class="wide">
+            Tags
+            <input id="entryTags" name="tags" maxlength="120" placeholder="work, personal, social">
+          </label>
+          <label class="wide">
+            Notes
+            <textarea id="entryNotes" name="notes" rows="4" maxlength="400" placeholder="Recovery email, MFA hint, etc."></textarea>
+          </label>
+          <div class="button-row wide">
+            <button class="ghost" id="openGeneratorFromForm" type="button">Password generator</button>
+            <button class="primary" type="submit">Save entry</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="overlay hidden" id="generatorModal">
+      <div class="modal narrow">
+        <div class="panel-head compact">
+          <div>
+            <p class="eyebrow">Utility</p>
+            <h3>Password generator</h3>
+          </div>
+          <button class="icon-button" data-close="generatorModal" type="button" aria-label="Close modal">×</button>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            Length
+            <input id="genLength" type="range" min="12" max="32" value="20">
+          </label>
+          <label>
+            Result
+            <input id="generatedPassword" readonly>
+          </label>
+          <div class="toggle-row">
+            <label><input id="genUpper" type="checkbox" checked> Uppercase</label>
+            <label><input id="genLower" type="checkbox" checked> Lowercase</label>
+            <label><input id="genNumber" type="checkbox" checked> Numbers</label>
+            <label><input id="genSymbol" type="checkbox" checked> Symbols</label>
+          </div>
+          <div class="button-row">
+            <button class="ghost" id="copyGeneratedButton" type="button">Copy</button>
+            <button class="primary" id="generateButton" type="button">Generate</button>
+            <button class="ghost" id="fillPasswordButton" type="button">Fill entry</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast hidden" id="toast"></div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

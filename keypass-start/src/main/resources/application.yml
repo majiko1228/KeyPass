@@ -1,0 +1,8 @@
+server:
+  port: 9111
+  servlet:
+    context-path: /keyPass
+
+key-pass:
+  app-name: KeyPass
+  profile: local
