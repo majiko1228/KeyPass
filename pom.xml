@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.keypass</groupId>
-    <artifactId>keypass</artifactId>
+    <groupId>com.keyPass</groupId>
+    <artifactId>keyPass</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -13,9 +13,9 @@
     <description>KeyPass multi-module project.</description>
 
     <modules>
-        <module>keypass-base</module>
-        <module>keypass-business</module>
-        <module>keypass-start</module>
+        <module>keyPassBase</module>
+        <module>keyPassBusiness</module>
+        <module>keyPassStart</module>
     </modules>
 
     <properties>
@@ -36,18 +36,18 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>com.keypass</groupId>
-                <artifactId>keypass-base</artifactId>
+                <groupId>com.keyPass</groupId>
+                <artifactId>keyPassBase</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.keypass</groupId>
-                <artifactId>keypass-business</artifactId>
+                <groupId>com.keyPass</groupId>
+                <artifactId>keyPassBusiness</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.keypass</groupId>
-                <artifactId>keypass-start</artifactId>
+                <groupId>com.keyPass</groupId>
+                <artifactId>keyPassStart</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

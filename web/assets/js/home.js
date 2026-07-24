@@ -1,5 +1,5 @@
-const STORAGE_KEY = "keypass.demo.v1";
-const DEFAULT_MASTER = "keypass-demo";
+const STORAGE_KEY = "keyPass.demo.v1";
+const DEFAULT_MASTER = "keyPass-demo";
 const AUTO_LOCK_DEFAULT = 5;
 
 const sampleEntries = [
@@ -9,32 +9,32 @@ const sampleEntries = [
     username: "majiko1228",
     password: "G7!vR8p#xQ2mT9@k",
     url: "https://github.com",
-    tags: ["work", "dev"],
-    notes: "Primary source repo and personal projects.",
+    tags: ["工作", "开发"],
+    notes: "主要代码仓库和个人项目。",
     favorite: true,
     updatedAt: "2026-07-21T15:18:00Z",
     createdAt: "2026-07-20T10:30:00Z",
   },
   {
     id: "gmail",
-    title: "Google Mail",
+    title: "谷歌邮箱",
     username: "chen@example.com",
     password: "N4v!2xL#91pQ@6",
     url: "https://mail.google.com",
-    tags: ["personal"],
-    notes: "Recovery phone verified.",
+    tags: ["个人"],
+    notes: "已验证找回手机号。",
     favorite: false,
     updatedAt: "2026-07-18T08:15:00Z",
     createdAt: "2026-07-15T09:00:00Z",
   },
   {
     id: "bank",
-    title: "Internet Banking",
+    title: "网上银行",
     username: "chenyupeng",
     password: "S8#zT5!qM4rN2",
     url: "https://bank.example.com",
-    tags: ["finance", "important"],
-    notes: "Use hardware token when available.",
+    tags: ["金融", "重要"],
+    notes: "可用时使用硬件令牌。",
     favorite: false,
     updatedAt: "2026-07-22T11:10:00Z",
     createdAt: "2026-07-14T13:05:00Z",
@@ -42,7 +42,7 @@ const sampleEntries = [
 ];
 
 const state = loadState();
-let locked = true;
+let locked = false;
 let autoLockTimer = null;
 
 const els = {
@@ -173,12 +173,8 @@ function setSelectedEntry(id) {
 }
 
 function lockVault() {
-  locked = true;
-  clearTimeout(autoLockTimer);
-  els.shell.classList.add("hidden");
-  els.lockScreen.classList.remove("hidden");
-  els.masterPassword.value = "";
-  showToast("Vault locked");
+  // The login page owns the entry flow, so a locked session returns to that page.
+  window.location.href = "../";
 }
 
 function unlockVault() {
@@ -188,11 +184,11 @@ function unlockVault() {
   els.searchInput.value = state.search || "";
   els.settingsMasterPassword.value = state.masterPassword;
   els.autoLockSetting.value = String(state.autoLockMinutes);
-  els.unlockHint.textContent = "Demo password: keypass-demo";
+  els.unlockHint.textContent = "演示密码：keyPass-demo";
   els.unlockHint.style.color = "";
   scheduleAutoLock();
   render();
-  showToast("Vault unlocked");
+  showToast("已进入密码库");
 }
 
 function scheduleAutoLock() {
@@ -200,7 +196,7 @@ function scheduleAutoLock() {
   autoLockTimer = setTimeout(() => {
     if (!locked) {
       lockVault();
-      showToast("Auto-locked after inactivity");
+      showToast("长时间无操作，已自动锁定");
     }
   }, state.autoLockMinutes * 60 * 1000);
 }
@@ -237,7 +233,7 @@ function renderTags() {
   els.tagList.innerHTML = "";
 
   if (!tags.length) {
-    els.tagList.innerHTML = '<span class="muted">No tags yet</span>';
+    els.tagList.innerHTML = '<span class="muted">暂无标签</span>';
     return;
   }
 
@@ -268,10 +264,10 @@ function renderView() {
   els.settingsView.classList.toggle("hidden", state.activeView !== "settings");
 
   const labels = {
-    vault: ["All entries", "Account vault"],
-    favorites: ["Favorites", "Favorite accounts"],
-    trash: ["Trash", "Removed items"],
-    settings: ["Settings", "Vault preferences"],
+    vault: ["全部账号", "账号密码库"],
+    favorites: ["收藏账号", "已收藏账号"],
+    trash: ["回收站", "已删除账号"],
+    settings: ["设置", "密码库设置"],
   };
 
   const [eyebrow, title] = labels[state.activeView] || labels.vault;
@@ -304,11 +300,11 @@ function getVisibleEntries() {
 
 function renderEntries() {
   const visible = getVisibleEntries();
-  els.filteredCount.textContent = `${visible.length} shown`;
+  els.filteredCount.textContent = `显示 ${visible.length} 项`;
   els.entryList.innerHTML = "";
 
   if (!visible.length) {
-    els.entryList.innerHTML = '<div class="detail-empty"><p>No entries match this filter.</p></div>';
+    els.entryList.innerHTML = '<div class="detail-empty"><p>没有符合当前筛选条件的账号。</p></div>';
     return;
   }
 
@@ -324,11 +320,11 @@ function renderEntries() {
       item.innerHTML = `
         <div class="entry-top">
           <span class="entry-title">${escapeHtml(entry.title)}</span>
-          ${entry.favorite ? '<span class="badge">Favorite</span>' : ""}
+          ${entry.favorite ? '<span class="badge">已收藏</span>' : ""}
         </div>
         <div class="entry-meta">
           <span>${escapeHtml(entry.username)}</span>
-          <span>${escapeHtml(entry.tags.join(", ") || "No tags")}</span>
+          <span>${escapeHtml(entry.tags.join("、") || "无标签")}</span>
         </div>
         <div class="entry-actions">
           <span>${escapeHtml(normalizeUrl(entry.url))}</span>
@@ -358,18 +354,18 @@ function renderDetail() {
   els.detailUrl.textContent = normalizeUrl(entry.url);
   els.detailUsername.textContent = entry.username;
   els.detailPassword.textContent = "••••••••••••";
-  els.detailTags.textContent = entry.tags.join(", ") || "No tags";
-  els.detailNotes.textContent = entry.notes || "No notes";
+  els.detailTags.textContent = entry.tags.join("、") || "无标签";
+  els.detailNotes.textContent = entry.notes || "无备注";
   els.favoriteButton.textContent = entry.favorite ? "★" : "☆";
-  els.favoriteButton.title = entry.favorite ? "Remove from favorites" : "Mark as favorite";
+  els.favoriteButton.title = entry.favorite ? "取消收藏" : "加入收藏";
 }
 
 function renderTrash() {
-  els.trashShownCount.textContent = `${state.trash.length} items`;
+  els.trashShownCount.textContent = `${state.trash.length} 项`;
   els.trashList.innerHTML = "";
 
   if (!state.trash.length) {
-    els.trashList.innerHTML = '<div class="detail-empty"><p>No removed items.</p></div>';
+    els.trashList.innerHTML = '<div class="detail-empty"><p>回收站为空。</p></div>';
     return;
   }
 
@@ -382,11 +378,11 @@ function renderTrash() {
       row.innerHTML = `
         <div>
           <strong>${escapeHtml(entry.title)}</strong>
-          <div class="muted">${escapeHtml(entry.username)} • deleted ${formatDate(entry.deletedAt)}</div>
+          <div class="muted">${escapeHtml(entry.username)} · 删除于 ${formatDate(entry.deletedAt)}</div>
         </div>
         <div class="button-row">
-          <button class="ghost tiny" type="button" data-restore="${entry.id}">Restore</button>
-          <button class="ghost tiny" type="button" data-remove="${entry.id}">Delete permanently</button>
+          <button class="ghost tiny" type="button" data-restore="${entry.id}">恢复</button>
+          <button class="ghost tiny" type="button" data-remove="${entry.id}">永久删除</button>
         </div>
       `;
       els.trashList.appendChild(row);
@@ -400,8 +396,8 @@ function renderSettings() {
 
 function openEntryModal(entry = null) {
   const isEdit = Boolean(entry);
-  els.entryModalEyebrow.textContent = isEdit ? "Edit account" : "New account";
-  els.entryModalTitle.textContent = isEdit ? "Update entry" : "Add entry";
+  els.entryModalEyebrow.textContent = isEdit ? "编辑账号" : "新增账号";
+  els.entryModalTitle.textContent = isEdit ? "更新账号" : "添加账号";
   els.entryId.value = entry ? entry.id : "";
   els.entryTitle.value = entry ? entry.title : "";
   els.entryUsername.value = entry ? entry.username : "";
@@ -452,7 +448,7 @@ function randomChar(chars) {
 function copyText(value, label) {
   if (navigator.clipboard?.writeText) {
     navigator.clipboard.writeText(value).then(
-      () => showToast(`${label} copied`),
+      () => showToast(`已复制${label}`),
       () => fallbackCopy(value, label)
     );
     return;
@@ -472,9 +468,9 @@ function fallbackCopy(value, label) {
 
   try {
     document.execCommand("copy");
-    showToast(`${label} copied`);
+    showToast(`已复制${label}`);
   } catch (error) {
-    showToast("Copy failed");
+    showToast("复制失败");
   } finally {
     document.body.removeChild(textarea);
   }
@@ -496,7 +492,7 @@ function deleteEntry(id) {
   state.selectedEntryId = state.entries[0]?.id || null;
   saveState();
   render();
-  showToast("Moved to trash");
+  showToast("已移至回收站");
 }
 
 function restoreEntry(id) {
@@ -509,14 +505,14 @@ function restoreEntry(id) {
   state.selectedEntryId = entry.id;
   saveState();
   render();
-  showToast("Entry restored");
+  showToast("账号已恢复");
 }
 
 function deletePermanently(id) {
   state.trash = state.trash.filter((entry) => entry.id !== id);
   saveState();
   render();
-  showToast("Entry deleted");
+  showToast("账号已删除");
 }
 
 function toggleFavorite() {
@@ -557,7 +553,7 @@ function createOrUpdateEntry(formData) {
   state.selectedEntryId = id;
   saveState();
   render();
-  showToast(existingIndex >= 0 ? "Entry updated" : "Entry created");
+  showToast(existingIndex >= 0 ? "账号已更新" : "账号已创建");
 }
 
 function slugify(value) {
@@ -578,12 +574,12 @@ function escapeHtml(value) {
 }
 
 function normalizeUrl(value) {
-  if (!value) return "No URL";
+  if (!value) return "未填写网址";
   return value.replace(/^https?:\/\//, "");
 }
 
 function formatDate(value) {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("zh-CN", {
     month: "short",
     day: "numeric",
   }).format(new Date(value));
@@ -594,7 +590,7 @@ els.unlockForm.addEventListener("submit", (event) => {
   if (els.masterPassword.value === state.masterPassword) {
     unlockVault();
   } else {
-    els.unlockHint.textContent = "Wrong password. Try the demo password again.";
+    els.unlockHint.textContent = "密码不正确，请重试。";
     els.unlockHint.style.color = "#c2410c";
   }
 });
@@ -621,15 +617,17 @@ els.searchInput.addEventListener("input", (event) => {
 });
 
 els.newEntryButton.addEventListener("click", () => openEntryModal());
-els.lockButton.addEventListener("click", lockVault);
+els.lockButton.addEventListener("click", () => {
+  window.location.href = "../";
+});
 els.favoriteButton.addEventListener("click", toggleFavorite);
 els.copyUsernameButton.addEventListener("click", () => {
   const entry = getSelectedEntry();
-  if (entry) copyText(entry.username, "Username");
+  if (entry) copyText(entry.username, "用户名");
 });
 els.copyPasswordButton.addEventListener("click", () => {
   const entry = getSelectedEntry();
-  if (entry) copyText(entry.password, "Password");
+  if (entry) copyText(entry.password, "密码");
 });
 els.editEntryButton.addEventListener("click", () => openEntryModal(getSelectedEntry()));
 els.deleteEntryButton.addEventListener("click", () => {
@@ -651,7 +649,7 @@ els.saveSecurityButton.addEventListener("click", () => {
   state.autoLockMinutes = Number(els.autoLockSetting.value) || AUTO_LOCK_DEFAULT;
   saveState();
   scheduleAutoLock();
-  showToast("Security settings saved");
+  showToast("安全设置已保存");
 });
 
 els.exportButton.addEventListener("click", () => {
@@ -659,10 +657,10 @@ els.exportButton.addEventListener("click", () => {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "keypass-vault.json";
+  link.download = "keyPass-vault.json";
   link.click();
   URL.revokeObjectURL(url);
-  showToast("Export started");
+  showToast("已开始导出");
 });
 
 els.importInput.addEventListener("change", async (event) => {
@@ -682,10 +680,10 @@ els.importInput.addEventListener("change", async (event) => {
     state.trash = Array.isArray(parsed.trash) ? parsed.trash : [];
     saveState();
     els.searchInput.value = state.search;
-    showToast("Vault imported");
+    showToast("密码库已导入");
     render();
   } catch (error) {
-    showToast("Invalid JSON file");
+    showToast("JSON 文件无效");
   } finally {
     event.target.value = "";
   }
@@ -704,11 +702,11 @@ els.generatorModal.addEventListener("click", (event) => {
 });
 
 els.generateButton.addEventListener("click", generatePassword);
-els.copyGeneratedButton.addEventListener("click", () => copyText(els.generatedPassword.value, "Generated password"));
+els.copyGeneratedButton.addEventListener("click", () => copyText(els.generatedPassword.value, "生成的密码"));
 els.fillPasswordButton.addEventListener("click", () => {
   els.entryPassword.value = els.generatedPassword.value;
   closeModal("generatorModal");
-  showToast("Password filled");
+  showToast("密码已填入账号");
 });
 els.genLength.addEventListener("input", generatePassword);
 els.genUpper.addEventListener("change", generatePassword);
@@ -747,4 +745,3 @@ if (state.search) {
 }
 
 render();
-lockVault();

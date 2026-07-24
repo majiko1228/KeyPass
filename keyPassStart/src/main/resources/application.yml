@@ -3,6 +3,6 @@ server:
   servlet:
     context-path: /keyPass
 
-key-pass:
+keyPass:
   app-name: KeyPass
   profile: local
