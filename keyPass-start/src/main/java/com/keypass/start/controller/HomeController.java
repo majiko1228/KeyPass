@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     /**
-     * 将常见的两种首页 URL 形式转发到打包后的静态页面。
+     * 将常见的两种首页 URL 形式转发到 Vue 构建后的应用入口。
      *
      * @return 静态首页路径
      */
     @GetMapping({"/home", "/home/"})
     public String home() {
-        return "forward:/home/index.html";
+        return "forward:/index.html";
     }
 }

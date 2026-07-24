@@ -8,19 +8,20 @@ JDK 11 Spring Boot Maven multi-module project.
 - `keyPass-business`: unified business module, currently split into `account` and `login` domains
 - `keyPass-base`: shared constants and models
 
-## Frontend prototype
+## Frontend
 
-The Spring Boot service serves the login page from `http://localhost:9111/keyPass/`.
-The account-vault home page is available at `http://localhost:9111/keyPass/home/`.
+The frontend uses Vue 3 and Vite. It is built during Maven's `generate-resources` phase, then packaged as Spring Boot static resources. The frontend and backend are deployed together in one Jar.
+
+The account-vault page is available at `http://localhost:9111/keyPass/` or `http://localhost:9111/keyPass/home/`.
 Use `GET /api/health` to verify the backend service is available.
 
-Implemented views:
-- Unlock screen
-- Vault list and detail panel
-- Entry editor modal
-- Password generator modal
-- Trash view
-- Settings and local JSON import/export
+For frontend-only development:
+
+```bash
+cd web
+npm install
+npm run dev
+```
 
 ## Requirements
 

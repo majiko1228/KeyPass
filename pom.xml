@@ -24,6 +24,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.release>11</maven.compiler.release>
         <spring-boot.version>2.7.18</spring-boot.version>
+        <swagger-annotations.version>2.2.22</swagger-annotations.version>
     </properties>
 
     <dependencyManagement>

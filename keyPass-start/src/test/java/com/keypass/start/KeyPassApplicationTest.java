@@ -28,7 +28,7 @@ class KeyPassApplicationTest {
     }
 
     /**
-     * 验证目录形式的首页 URL 能正确转发到静态首页。
+     * 验证目录形式的首页 URL 能正确转发到 Vue 应用入口。
      *
      * @throws Exception MVC 请求无法完成时抛出
      */
@@ -36,7 +36,7 @@ class KeyPassApplicationTest {
     void homeDirectoryRoutesToStaticPage() throws Exception {
         mockMvc.perform(get("/home/"))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/home/index.html"));
+                .andExpect(forwardedUrl("/index.html"));
     }
 
     /**
