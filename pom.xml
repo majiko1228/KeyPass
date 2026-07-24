@@ -13,9 +13,9 @@
     <description>KeyPass multi-module project.</description>
 
     <modules>
-        <module>keyPassBase</module>
-        <module>keyPassBusiness</module>
-        <module>keyPassStart</module>
+        <module>keyPass-base</module>
+        <module>keyPass-business</module>
+        <module>keyPass-start</module>
     </modules>
 
     <properties>
@@ -37,17 +37,17 @@
             </dependency>
             <dependency>
                 <groupId>com.keyPass</groupId>
-                <artifactId>keyPassBase</artifactId>
+                <artifactId>keyPass-base</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.keyPass</groupId>
-                <artifactId>keyPassBusiness</artifactId>
+                <artifactId>keyPass-business</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.keyPass</groupId>
-                <artifactId>keyPassStart</artifactId>
+                <artifactId>keyPass-start</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

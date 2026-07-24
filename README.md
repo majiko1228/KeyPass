@@ -4,9 +4,9 @@ JDK 11 Spring Boot Maven multi-module project.
 
 ## Modules
 
-- `keyPassStart`: startup class and config files
-- `keyPassBusiness`: business services
-- `keyPassBase`: shared constants and models
+- `keyPass-start`: startup class and config files
+- `keyPass-business`: unified business module, currently split into `account` and `login` domains
+- `keyPass-base`: shared constants and models
 
 ## Frontend prototype
 
@@ -32,5 +32,5 @@ Implemented views:
 ```bash
 mvn test
 mvn package
-java -jar keyPassStart/target/keyPassStart-1.0-SNAPSHOT.jar
+java -jar keyPass-start/target/keyPass-start-1.0-SNAPSHOT.jar
 ```
