@@ -1,8 +1,19 @@
+spring:
+  application:
+    name: KeyPass
+
 server:
   port: 9111
   servlet:
     context-path: /keyPass
 
+
 keyPass:
   app-name: KeyPass
   profile: local
+
+
+logging:
+  level:
+    root: info
+    com.keypass: info
